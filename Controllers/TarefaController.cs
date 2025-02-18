@@ -32,10 +32,19 @@ namespace TrilhaApiDesafio.Controllers
         }
 
         [HttpGet("ObterTodos")]
-        public IActionResult ObterTodos()
+        public List<Tarefa> ObterTodos(int? pagina)
         {
             // TODO: Buscar todas as tarefas no banco utilizando o EF
-            return Ok();
+            var listaTarefas = _context.Tarefas.AsQueryable();
+
+            int itensPorPagina = 10;
+            if (pagina != null)
+            
+                listaTarefas = listaTarefas.Skip((int)(pagina - 1) * itensPorPagina).Take(itensPorPagina);
+                return listaTarefas.ToList();   
+            
+            
+            
         }
 
         [HttpGet("ObterPorTitulo")]
@@ -111,7 +120,7 @@ namespace TrilhaApiDesafio.Controllers
             // TODO: Remover a tarefa encontrada através do EF e salvar as mudanças (save changes)
             _context.Tarefas.Remove(tarefaBanco);
             _context.SaveChanges();
-            
+
             return NoContent();
         }
     }
